@@ -1,125 +1,52 @@
-# 项目地图（PROJECT MAP）
-# ============================================================
-# 本文件说明每个文件夹/文件的作用，方便快速找到对应代码
-# 代码运行不需要本文件，只是导览用
-# ============================================================
+# 项目地图
 
-embedding work/
-│
-├── 📁 data/                  [数据缓存] 自动下载的数据集缓存（pbmc3k等）
-│
-├── 📁 datasets/              [阶段一：数据集注册]
-│   ├── __init__.py           数据集注册表（告诉config有哪些数据集可选）
-│   ├── wine.py               UCI Wine数据集（3类，13维，178样本）
-│   ├── dermatology.py        UCI 皮肤病数据集（6类，34维）
-│   ├── breast_cancer.py       UCI 乳腺癌数据集（2类）
-│   ├── mfeat.py              UCI 多特征数据集（10类）
-│   ├── spambase.py           UCI 垃圾邮件数据集（2类，57维）
-│   ├── dry_bean.py           UCI 干豆数据集（大样本）
-│   ├── mnist.py              MNIST手写数字（10类，784维）
-│   ├── fmnist.py             Fashion-MNIST服饰（10类，784维）
-│   ├── pbmc3k.py             PBMC3k单细胞数据
-│   └── iris_test.py          Iris鸢尾花（测试用小数据集）
-│
-├── 📁 stage2_neuron/          [阶段二：神经元形态学实验]
-│   ├── single_neuron_demo.py  单个神经元点云降维demo
-│   ├── batch_plot_all.py      批量跑50个神经元，出黑白连线版图
-│   ├── analyze_pattern.py     分析神经元形态与降维效果的关系
-│   ├── output_figures/         50张神经元输出图
-│   └── 神经元降维对比图_50张.zip  打包好的结果（已交付）
-│
-├── 📁 sude_work/              [阶段三：SUDE新算法对比实验]
-│   ├── run_compare.py          主程序：2x2四宫格对比图（3D+t-SNE+UMAP+SUDE）
-│   ├── config.py              配置：切换数据集、调SUDE参数
-│   ├── data_loader.py          数据加载（UCI自动下载+本地CSV）
-│   ├── README.md               使用说明
-│   └── sude_compare.png        Wine测试结果图
-│
-├── 📁 sude_official/          [参考：SUDE官方源码（不用改）]
-│   ├── sude_py/               Python版官方代码
-│   ├── sude_mat/              MATLAB版官方代码
-│   ├── ECG/                   心电图应用示例
-│   └── scRNA-seq/             单细胞应用示例
-│
-├── 📁 swc_data/               [原始数据] 50个.swc神经元文件
-│
-├── 📄 main.py                [阶段一入口] 选一个数据集，跑t-SNE+UMAP对比
-├── 📄 config.py               [阶段一配置] 改这里切换数据集、调参数
-├── 📄 data_loader.py           [阶段一] 数据加载器
-├── 📄 run_tsne.py             [阶段一] 单独跑t-SNE
-├── 📄 run_umap.py             [阶段一] 单独跑UMAP
-├── 📄 visualizer.py            [阶段一] 画图工具函数
-├── 📄 plot_3d.py              [阶段一] 画3D原始结构图
-├── 📄 summary_table.py         [阶段一] 生成多数据集汇总对比表
-├── 📄 generate_report_pdf.py   [阶段一] 生成汇报PDF
-├── 📄 README.md               项目总说明
-└── 📄 流形学习实验汇报.pdf     [交付物] 最终汇报文档
+[← 返回首页](README.md) · [实验指南](docs/GUIDE.md)
 
+## 按任务找入口
 
-# ============================================================
-# 快速入口：想跑哪个实验？
-# ============================================================
-# 1. 经典流形算法对比（t-SNE vs UMAP）
-#    → 打开 main.py，改 config.py 里的 DATASET_NAME
-#
-# 2. 神经元形态降维实验
-#    → 打开 stage2_neuron/batch_plot_all.py
-#
-# 3. SUDE新算法对比（3D+t-SNE+UMAP+SUDE四宫格）
-#    → 打开 sude_work/run_compare.py
-#
-# 切换数据集只需改对应文件夹里的 config.py
-# ============================================================
+| 想做什么 | 运行入口 | 配置或数据位置 |
+| --- | --- | --- |
+| 比较 t-SNE / UMAP | [main.py](main.py) | [config.py](config.py) |
+| 列出基础实验数据集 | [data_loader.py](data_loader.py) | [数据注册表](datasets/__init__.py) |
+| 批量绘制神经元结构 | [batch_plot_all.py](stage2_neuron/batch_plot_all.py) | 自行准备根目录 `swc_data/` |
+| 比较 SUDE / t-SNE / UMAP | [run_compare.py](sude_work/run_compare.py) | [sude_work/config.py](sude_work/config.py) |
+| 汇总多个数据集 | [summary_table.py](summary_table.py) | 脚本内 `DATASETS_TO_RUN` |
 
+## 目录职责
 
-# ============================================================
-# 具体操作：怎么切换数据集？（一项一项跟着做）
-# ============================================================
-#
-# ▶ 情况一：阶段一（经典t-SNE/UMAP对比）换数据集
-# ------------------------------------------------------------
-# 1. 打开根目录的 config.py
-# 2. 找到这一行: DATASET_NAME = 'wine'
-# 3. 把引号里的名字改成你想用的数据集，可选:
-#      'wine' / 'dermatology' / 'breast_cancer' / 'mfeat'
-#      'spambase' / 'dry_bean' / 'mnist' / 'fmnist'
-# 4. 保存（Ctrl+S）
-# 5. 右键 main.py → Run 'main'
-#
-#
-# ▶ 情况二：阶段三（SUDE对比实验）换数据集
-# ------------------------------------------------------------
-# 1. 打开 sude_work/config.py
-# 2. 找到这一行: DATASET_NAME = 'wine'
-# 3. 改成: 'wine' / 'dermatology' / 'breast_cancer' / 'iris' / 'digits'
-# 4. 保存
-# 5. 右键 sude_work/run_compare.py → Run
-#
-#
-# ▶ 情况三：用自己的数据（不是内置数据集）
-# ------------------------------------------------------------
-# 1. 把你的数据保存成CSV文件：每行一个样本，最后一列是类别标签
-# 2. 打开对应文件夹的 config.py（阶段一改根目录的，SUDE改sude_work的）
-# 3. 找到 CSV_PATH = '' 这一行，把你的文件绝对路径填进去:
-#      例: CSV_PATH = r'C:\Users\ASUS\Desktop\my_data.csv'
-# 4. 找到 CSV_LABEL_COL = -1（默认最后一列是标签，不用改）
-# 5. 保存，右键运行主程序
-#
-#
-# ▶ 情况四：阶段二（神经元实验）换数据
-# ------------------------------------------------------------
-# 不需要改代码，直接把新的 .swc 文件放进 swc_data/ 文件夹
-# 然后运行 stage2_neuron/batch_plot_all.py，自动批量处理
-#
-#
-# ▶ 常见问题
-# ------------------------------------------------------------
-# Q: 改了数据集但图没变？
-# A: 确认改的是对应项目的 config.py，不是别的文件夹的
-#
-# Q: 第一次跑新数据集很慢？
-# A: 第一次会联网下载数据，下一次就直接读本地缓存了
-#
-# Q: 数据太大跑不动？
-# A: 主程序默认会截取前3000个样本做演示，结果图上会标注
-# ============================================================
+| 路径 | 内容 | 说明 |
+| --- | --- | --- |
+| [datasets/](datasets/) | 数据加载器与注册表 | 10 个注册入口，实际数据来源见首页 |
+| [stage2_neuron/](stage2_neuron/) | 神经元演示、批量绘图和分析 | 需要单独准备 SWC 数据 |
+| [sude_work/](sude_work/) | SUDE 四宫格对比实验 | 独立配置；支持本地 CSV |
+| [sude_official/](sude_official/) | 上游参考源码和说明 | MATLAB、R 等参考实现；保留来源声明 |
+| [sude_official/sude_py/](sude_official/sude_py/) | Python 包的上游说明 | 本目录不是完整的可安装 Python 包 |
+| [docs/](docs/) | 实验使用指南 | 安装、数据、限制与反馈 |
+
+## 根目录文件
+
+| 文件 | 职责 |
+| --- | --- |
+| [config.py](config.py) | 基础实验的数据集、算法参数和绘图设置 |
+| [data_loader.py](data_loader.py) | 按注册名称加载数据 |
+| [run_tsne.py](run_tsne.py) / [run_umap.py](run_umap.py) | 算法封装函数，由入口调用；单独执行不会启动完整实验 |
+| [visualizer.py](visualizer.py) | 并排绘图及保存 |
+| [plot_3d.py](plot_3d.py) | 3D 可视化辅助脚本 |
+| [summary_table.py](summary_table.py) | 多数据集对比图 |
+| [generate_report_pdf.py](generate_report_pdf.py) | 报告生成脚本，包含需调整的本机路径 |
+| [SOURCE_UPLOAD.md](SOURCE_UPLOAD.md) | 公开范围与验证说明 |
+
+## 数据与输出文件
+
+以下为运行时路径或本地资料，**不是仓库已附带的内容**：
+
+| 路径或文件 | 用途 |
+| --- | --- |
+| `swc_data/` | 用户准备的神经元原始数据 |
+| `data/` | 部分数据下载缓存，实际位置取决于加载器 |
+| `embedding_compare.png` | 基础实验输出，相对于运行工作目录 |
+| `sude_compare.png` | SUDE 实验输出，相对于运行工作目录 |
+| `stage2_neuron/output_figures/` | 神经元批量结果 |
+| PDF、ZIP 和历史实验图片 | 本地历史资料，未随源码发布 |
+
+**配置不要混用：** 基础实验修改根目录 `config.py`；SUDE 实验修改 `sude_work/config.py`。自定义 CSV 入口仅在后者提供。
